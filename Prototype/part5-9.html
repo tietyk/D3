@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <style>
+    .main-content{
+      width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 12px;
+    }
+    .map {
+      display: inline-block;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .q0-9 { fill:#1a9850; }
+    .q1-9 { fill:#66bd63; }
+    .q2-9 { fill:#a6d96a; }
+    .q3-9 { fill:#d9ef8b; }
+    .q4-9 { fill:#ffffbf; }
+    .q5-9 { fill:#fee08b; }
+    .q6-9 { fill:#fdae61; }
+    .q7-9 { fill:#f46d43; }
+    .q8-9 { fill:#d73027; }
+    /* Make the overlay layer invisible but still reactive to pointer events */
+    .overlay {
+      fill: none;
+      pointer-events: all;
+    }
+  </style>
+  <script type="text/javascript">
+    function draw(geo_data) {
+      "use strict";
+      var width = 750,
+          height = 600,
+          scale = 6500,
+          translateX = -240,
+          translateY = 7260,
+          data;
+
+      var projection = d3.geo.mercator()
+          .scale(scale)
+          .translate( [translateX, translateY]);
+
+      var path = d3.geo.path().projection(projection);
+
+      //Pre-set the needed zoom behaviour
+      //Set a range for the extent that zooming is allowed
+      //Add event
+      var zoom = d3.behavior.zoom()
+          .scaleExtent([1, 8])
+          .on("zoom", zoomhandler);
+
+      //Add a new g element to the SVG
+      //Call the pre-set zoom behaviour and add the event to the appended group
+      var svg = d3.select("#chart")
+          .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("class", "map")
+          .append("g")
+           .attr("id","zoomgroup")
+          .call(zoom);
+
+      //Add overlay rectangle to apply the zoom to the whole area of the SVG
+      svg.append("rect")
+          .attr("class", "overlay")
+          .attr("width", width)
+          .attr("height", height);
+
+      var map = svg.selectAll("path")
+          .data(geo_data.features)
+          .enter()
+          .append("path")
+            .attr("d", path)
+            .style("stroke", "black")
+            .style("stroke-width", 0.5);
+
+      d3.json("arrests.json", function(json){
+          data = json;
+          svg.selectAll("path")
+            .attr("class", quantify)
+      });
+
+      //Event handler for the zoom behaviour
+      //Add transform attribute to change the scale and location parameters of the map based on the zoom interaction
+      function zoomhandler() {
+        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      }
+
+      function quantify(d) {
+        var f = data[d.properties.OMSCHRIJVI][1];
+        return "q" + Math.min(8, ~~((f-250) / 150)) + "-9";
+      }
+    };
+    </script>
+  </head>
+<body>
+  <section class="main-content">
+    <h2>Arrests per 100.000 inhabitants</h2>
+    <div id="chart"></div>
+  </section>
+  <script type="text/javascript">
+    d3.json("provinces.geojson", draw);
+  </script>
+</body>
+</html>
