@@ -2,7 +2,6 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <script src="http://d3js.org/d3.v3.min.js"></script>
   <style>
     .main-content{
       width: 1000px;
@@ -35,7 +34,16 @@
       cursor:default;
     }
   </style>
+</head>
+<body>
+  <section class="main-content">
+    <h2>Arrests per 100.000 inhabitants</h2>
+    <div id="chart"></div>
+  </section>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
   <script type="text/javascript">
+    d3.json("provinces.geojson", draw);
+
     function draw(geo_data) {
       "use strict";
       var width = 750,
@@ -107,15 +115,6 @@
         return "q" + Math.min(8, ~~((f-250) / 150)) + "-9";
       }
     };
-    </script>
-  </head>
-<body>
-  <section class="main-content">
-    <h2>Arrests per 100.000 inhabitants</h2>
-    <div id="chart"></div>
-  </section>
-  <script type="text/javascript">
-    d3.json("provinces.geojson", draw);
   </script>
 </body>
 </html>
