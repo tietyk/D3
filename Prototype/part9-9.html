@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    .main-content{
+      width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 12px;
+    }
+    .map {
+      display: inline-block;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .q0-9 { fill:#1a9850; }
+    .q1-9 { fill:#66bd63; }
+    .q2-9 { fill:#a6d96a; }
+    .q3-9 { fill:#d9ef8b; }
+    .q4-9 { fill:#ffffbf; }
+    .q5-9 { fill:#fee08b; }
+    .q6-9 { fill:#fdae61; }
+    .q7-9 { fill:#f46d43; }
+    .q8-9 { fill:#d73027; }
+    .overlay {
+      fill: none;
+      pointer-events: all;
+    }
+    .label {
+      font-weight: bold;
+      text-anchor: middle;
+      cursor:default;
+    }
+    div.tooltip {
+      position: absolute;
+      text-align: center;
+      padding: 4px;
+      background: #fff;
+      border: 0px;
+      pointer-events: none;
+    }
+    /* center the time-series elements on the page in the #timeline container*/
+    #timeline{
+      width: 750px;
+      margin: 0 auto;
+    }
+    /* basic styling for the time-series elements */
+    .time-series {
+      width:50px;
+      background: #eee;
+      margin:0;
+      padding:0;
+      text-align:center;
+      line-height: 30px;
+      float: left;
+    }
+    /* styles for the active time-series element */
+    .active {
+      background: #b4b4b4;
+      color:white;
+    }
+    /* styles for the trend information */
+    .trend {
+      font-weight: bold;
+      font-size: 110%;
+    }
+    .pos {
+      color: #1a9850;
+    }
+    .neg {
+      color: #d73027;
+    }
+
+  </style>
+
+  </head>
+<body>
+  <section class="main-content">
+    <h2>Arrests per 100.000 inhabitants</h2>
+    <div id="chart">
+      <div id="timeline">
+        <div class="time-series active">1999</div>
+        <div class="time-series">2000</div>
+        <div class="time-series">2001</div>
+        <div class="time-series">2002</div>
+        <div class="time-series">2003</div>
+        <div class="time-series">2004</div>
+        <div class="time-series">2005</div>
+        <div class="time-series">2006</div>
+        <div class="time-series">2007</div>
+        <div class="time-series">2008</div>
+        <div class="time-series">2009</div>
+        <div class="time-series">2010</div>
+        <div class="time-series">2011</div>
+        <div class="time-series">2012</div>
+        <div class="time-series">2013</div>
+      </div>
+    </div>
+  </section>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script type="text/javascript">
+    d3.json("provinces.geojson", draw);
+  </script>
+  <script type="text/javascript">
+    function draw(geo_data) {
+      "use strict";
+      //Add a year variable to connect the time series data
+      var width = 750,
+          height = 600,
+          scale = 6500,
+          translateX = -240,
+          translateY = 7260,
+          legendRectSize = 18,
+          legendSpacing = 4,
+          year,
+          data;
+
+      var projection = d3.geo.mercator()
+          .scale(scale)
+          .translate( [translateX, translateY]);
+
+      var path = d3.geo.path().projection(projection);
+
+      var zoom = d3.behavior.zoom()
+          .scaleExtent([1, 8])
+          .on("zoom", zoomhandler);
+
+      var svg = d3.select("#chart")
+          .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("class", "map")
+          .append("g")
+            .attr("id","zoomgroup")
+          .call(zoom);
+
+      svg.append("rect")
+          .attr("class", "overlay")
+          .attr("width", width)
+          .attr("height", height);
+
+      var map = svg.selectAll("path")
+          .data(geo_data.features)
+          .enter()
+          .append("path")
+            .attr("d", path)
+            .style("stroke", "black")
+            .style("stroke-width", 0.5)
+              .on("mouseover", mouseover)
+              .on("mousemove", mousemove)
+              .on("mouseout", mouseout);
+
+      var tooltip = d3.select("section")
+          .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+      var label = svg.selectAll("text")
+          .data(geo_data.features)
+          .enter()
+          .append("text")
+            .attr("class", "label")
+            .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+            .text(function(d) { return d.properties.OMSCHRIJVI;} )
+              .on("mouseover", mouseover)
+              .on("mousemove", mousemove)
+              .on("mouseout", mouseout);
+
+      var color = d3.scale.ordinal()
+          .domain(["<400", "400-549", "550-699", "700-849", "850-999", "1000-1149", "1150-1299", "1300-1449", ">1450"])
+          .range(["#1a9850", "#66bd63", "#a6d96a","#d9ef8b","#ffffbf","#fee08b","#fdae61","#f46d43","#d73027"]);
+
+      var legend = d3.select('svg')
+          .append("g")
+          .selectAll("g")
+          .data(color.domain())
+          .enter()
+          .append('g')
+            .attr('class', 'legend')
+            .attr('transform', function(d, i) {
+              var height = legendRectSize;
+              var horz = 0;
+              var vert = i * height;
+              return 'translate(' + horz + ',' + vert + ')';
+          });
+
+      legend.append('rect')
+          .attr('width', legendRectSize)
+          .attr('height', legendRectSize)
+          .style('fill', color)
+          .style('stroke', color);
+
+      legend.append('text')
+          .attr('x', legendRectSize + legendSpacing)
+          .attr('y', legendRectSize - legendSpacing)
+          .text(function(d) { return d; });
+
+      //Select all .time-series elements on the page
+      //Add an event that activates when you move the cursor over the element
+        //Set the year equal to the index of the element on the page to be used to collect data from the arrests.json file
+        //select all paths in the SVG
+          //Give it a new color class based on the index/year
+        //Select all time-series elements and give them the class time-series
+        //Select the current .time-series element and give it the class "time-series active" to be able to show which element is active and used for the rendering of the map
+      var timeline = d3.selectAll(".time-series")
+          .on("mouseover", function(d, i) {
+            year = i;
+            svg.selectAll("path")
+              .attr("class", quantify);
+            d3.selectAll(".time-series")
+              .attr("class", "time-series");
+            this.className = "time-series active";
+          });
+
+      d3.json("arrests.json", function(json){
+          data = json;
+          svg.selectAll("path")
+            .attr("class", quantify)
+      });
+
+      function zoomhandler() {
+        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      }
+
+      //Add a year variable to select the correct data from the arrests.json file. index=0 in the JSON file corresponds with the year 1999, index 14 is data from the year 2013
+      function quantify(d) {
+        year = year || 0;
+        var f = data[d.properties.OMSCHRIJVI][year];
+        return "q" + Math.min(8, ~~((f-250) / 150)) + "-9";
+      }
+      function mouseover(){
+        tooltip.transition()
+          .duration(200)
+          .style("opacity", .9);
+      }
+      //Add the trend function return to the tooltip information
+      function mousemove(d){
+          tooltip .html(d.properties.OMSCHRIJVI + " " + trend(d) +  "<br/>"  + data[d.properties.OMSCHRIJVI][year] + " arrests")
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY - 50) + "px");
+      }
+      function mouseout(){
+          tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
+      }
+      //Function to show if the arrests of the current year are more, less or equal to the arrests the year before
+      //Check if there is a previous year available in the dataset
+      //Check if the arrests of the year before minus the current year are less then 0, which would mean that in the current year there are more arrests so an upward trend
+      //Check if the arrests of the year before minus the current year 0, which would mean that in the current year there as many arrests as the year before
+      //Else return a downward trend for all other situations
+      function trend(d) {
+        if(!data[d.properties.OMSCHRIJVI][year-1]){
+          return "";
+        } else if( ((data[d.properties.OMSCHRIJVI][year-1])-(data[d.properties.OMSCHRIJVI][year])) > 0 ){
+          return "<span class='trend pos'>&#8600;</span>";
+        } else if( ((data[d.properties.OMSCHRIJVI][year-1])-(data[d.properties.OMSCHRIJVI][year])) == 0 ){
+          return "<span class='trend'>=</span>";
+        } else {
+          return "<span class='trend neg'>&#8599;</span>";
+        }
+      }
+    };
+  </script>
+</body>
+</html>

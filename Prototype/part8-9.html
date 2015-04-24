@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    .main-content{
+      width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 12px;
+    }
+    .map {
+      display: inline-block;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .q0-9 { fill:#1a9850; }
+    .q1-9 { fill:#66bd63; }
+    .q2-9 { fill:#a6d96a; }
+    .q3-9 { fill:#d9ef8b; }
+    .q4-9 { fill:#ffffbf; }
+    .q5-9 { fill:#fee08b; }
+    .q6-9 { fill:#fdae61; }
+    .q7-9 { fill:#f46d43; }
+    .q8-9 { fill:#d73027; }
+    .overlay {
+      fill: none;
+      pointer-events: all;
+    }
+    .label {
+      font-weight: bold;
+      text-anchor: middle;
+      cursor:default;
+    }
+    div.tooltip {
+        position: absolute;
+        text-align: center;
+        padding: 4px;
+        background: #fff;
+        border: 0px;
+        pointer-events: none;
+      }
+  </style>
+</head>
+<body>
+  <section class="main-content">
+    <h2>Arrests per 100.000 inhabitants</h2>
+    <div id="chart"></div>
+  </section>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script type="text/javascript">
+    d3.json("provinces.geojson", draw);
+
+    function draw(geo_data) {
+      "use strict";
+      var width = 750,
+          height = 600,
+          scale = 6500,
+          translateX = -240,
+          translateY = 7260,
+          legendRectSize = 18,
+          legendSpacing = 4,
+          data;
+
+      var projection = d3.geo.mercator()
+          .scale(scale)
+          .translate( [translateX, translateY]);
+
+      var path = d3.geo.path().projection(projection);
+
+      var zoom = d3.behavior.zoom()
+          .scaleExtent([1, 8])
+          .on("zoom", zoomhandler);
+
+      var svg = d3.select("#chart")
+          .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("class", "map")
+          .append("g")
+            .attr("id","zoomgroup")
+          .call(zoom);
+
+      svg.append("rect")
+          .attr("class", "overlay")
+          .attr("width", width)
+          .attr("height", height);
+
+      //Add tooltip events to the map paths, functions are defined line 153 and further
+      var map = svg.selectAll("path")
+          .data(geo_data.features)
+          .enter()
+          .append("path")
+            .attr("d", path)
+            .style("stroke", "black")
+            .style("stroke-width", 0.5)
+              .on("mouseover", mouseover)
+              .on("mousemove", mousemove)
+              .on("mouseout", mouseout);
+
+      //Add the tooltip events to the labels as well, function line 153+
+      var label = svg.selectAll("text")
+          .data(geo_data.features)
+          .enter()
+          .append("text")
+            .attr("class", "label")
+            .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+            .text(function(d) { return d.properties.OMSCHRIJVI;} )
+              .on("mouseover", mouseover)
+              .on("mousemove", mousemove)
+              .on("mouseout", mouseout);
+
+      var color = d3.scale.ordinal()
+          .domain(["<400", "400-549", "550-699", "700-849", "850-999", "1000-1149", "1150-1299", "1300-1449", ">1450"])
+          .range(["#1a9850", "#66bd63", "#a6d96a","#d9ef8b","#ffffbf","#fee08b","#fdae61","#f46d43","#d73027"]);
+
+      var legend = d3.select('svg')
+          .append("g")
+          .selectAll("g")
+          .data(color.domain())
+          .enter()
+          .append('g')
+            .attr('class', 'legend')
+            .attr('transform', function(d, i) {
+              var height = legendRectSize;
+              var horz = 0;
+              var vert = i * height;
+              return 'translate(' + horz + ',' + vert + ')';
+          });
+
+      legend.append('rect')
+          .attr('width', legendRectSize)
+          .attr('height', legendRectSize)
+          .style('fill', color)
+          .style('stroke', color);
+
+      legend.append('text')
+          .attr('x', legendRectSize + legendSpacing)
+          .attr('y', legendRectSize - legendSpacing)
+          .text(function(d) { return d; });
+
+      //Add a div to the section containing the map to hold the tooltip information
+      var tooltip = d3.select("section")
+          .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+      d3.json("arrests.json", function(json){
+          data = json;
+          svg.selectAll("path")
+            .attr("class", quantify)
+      });
+
+      function zoomhandler() {
+        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      }
+      function quantify(d) {
+        var f = data[d.properties.OMSCHRIJVI][1];
+        return "q" + Math.min(8, ~~((f-250) / 150)) + "-9";
+      }
+
+      //Make the tooltip visible with CSS transition
+      function mouseover(){
+        tooltip.transition()
+          .duration(200)
+          .style("opacity", .9);
+      }
+
+      //Add the data you want to display to the tooltip. The province that is hovered and the number of arrests in that province.
+        //Position the left side of the tooltip at the same left offset as the mouse cursor,
+        //Position the tooltip 50px above the cursor
+      function mousemove(d){
+          tooltip .html(d.properties.OMSCHRIJVI  + "<br/>"  + data[d.properties.OMSCHRIJVI][1] + " arrests")
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY - 50) + "px");
+      }
+
+      //Hide the tooltip whit CSS transition when you are no longer hover over it
+      function mouseout(){
+          tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
+      }
+    };
+  </script>
+</body>
+</html>

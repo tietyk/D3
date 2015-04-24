@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    .main-content{
+      width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 12px;
+    }
+    .map {
+      display: inline-block;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .q0-9 { fill:#1a9850; }
+    .q1-9 { fill:#66bd63; }
+    .q2-9 { fill:#a6d96a; }
+    .q3-9 { fill:#d9ef8b; }
+    .q4-9 { fill:#ffffbf; }
+    .q5-9 { fill:#fee08b; }
+    .q6-9 { fill:#fdae61; }
+    .q7-9 { fill:#f46d43; }
+    .q8-9 { fill:#d73027; }
+    .overlay {
+      fill: none;
+      pointer-events: all;
+    }
+    .label {
+      font-weight: bold;
+      text-anchor: middle;
+      cursor:default;
+    }
+  </style>
+</head>
+<body>
+  <section class="main-content">
+    <h2>Arrests per 100.000 inhabitants</h2>
+    <div id="chart"></div>
+  </section>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script type="text/javascript">
+    d3.json("provinces.geojson", draw);
+
+    function draw(geo_data) {
+      "use strict";
+      var width = 750,
+          height = 600,
+          scale = 6500,
+          translateX = -240,
+          translateY = 7260,
+          legendRectSize = 18,
+          legendSpacing = 4,
+          data;
+
+      var projection = d3.geo.mercator()
+          .scale(scale)
+          .translate( [translateX, translateY]);
+
+      var path = d3.geo.path().projection(projection);
+
+      var zoom = d3.behavior.zoom()
+          .scaleExtent([1, 8])
+          .on("zoom", zoomhandler);
+
+      var svg = d3.select("#chart")
+          .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("class", "map")
+          .append("g")
+            .attr("id","zoomgroup")
+          .call(zoom);
+
+      svg.append("rect")
+          .attr("class", "overlay")
+          .attr("width", width)
+          .attr("height", height);
+
+      var map = svg.selectAll("path")
+          .data(geo_data.features)
+          .enter()
+          .append("path")
+            .attr("d", path)
+            .style("stroke", "black")
+            .style("stroke-width", 0.5);
+
+      var label = svg.selectAll("text")
+          .data(geo_data.features)
+          .enter()
+          .append("text")
+            .attr("class", "label")
+            .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+            .text(function(d) { return d.properties.OMSCHRIJVI;} );
+
+      //Make a variable to contain the range and domain of the color scale used in the map
+      //Add the information about the groups used in the map based on the quantify function
+      //Add a color to each group
+      var color = d3.scale.ordinal()
+          .domain(["<400", "400-549", "550-699", "700-849", "850-999", "1000-1149", "1150-1299", "1300-1449", ">1450"])
+          .range(["#1a9850", "#66bd63", "#a6d96a","#d9ef8b","#ffffbf","#fee08b","#fdae61","#f46d43","#d73027"]);
+
+      //Select the SVG
+      //Append a new g element
+      //Select all g elements inside of the new g element (The g elements don't exist yet, but you still need to select them)
+      //Add the data from the color variable
+      //Connect the color varable data to virtual g elements
+      //Append the g elements to the SVG map and add attributes
+        //Add a class 
+        //Add coordinates to position the g elements on the SVG map top left
+          //function to list all the legend elements under each other based on the hight of one element
+      var legend = d3.select('svg')
+          .append("g")
+          .selectAll("g")
+          .data(color.domain())
+          .enter()
+          .append('g')
+            .attr('class', 'legend')
+            .attr('transform', function(d, i) {
+              var height = legendRectSize;
+              var horz = 0;
+              var vert = i * height;
+              return 'translate(' + horz + ',' + vert + ')';
+          });
+
+      //Append a rectangle to each legend element to display the colors from the domain in the color variable
+      legend.append('rect')
+          .attr('width', legendRectSize)
+          .attr('height', legendRectSize)
+          .style('fill', color)
+          .style('stroke', color);
+
+      //Append a text element to each legend element based on the listed domains in the color variable
+      legend.append('text')
+          .attr('x', legendRectSize + legendSpacing)
+          .attr('y', legendRectSize - legendSpacing)
+          .text(function(d) { return d; });
+
+      d3.json("arrests.json", function(json){
+          data = json;
+          svg.selectAll("path")
+            .attr("class", quantify)
+      });
+
+      function zoomhandler() {
+        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      }
+
+      function quantify(d) {
+        var f = data[d.properties.OMSCHRIJVI][1];
+        return "q" + Math.min(8, ~~((f-250) / 150)) + "-9";
+      }
+    };
+  </script>
+</body>
+</html>

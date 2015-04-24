@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    .main-content{
+      width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 12px;
+    }
+    .map {
+      display: inline-block;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    /* for each range class a color based on colorbrewer */
+    .q0-9 { fill:#1a9850; }
+    .q1-9 { fill:#66bd63; }
+    .q2-9 { fill:#a6d96a; }
+    .q3-9 { fill:#d9ef8b; }
+    .q4-9 { fill:#ffffbf; }
+    .q5-9 { fill:#fee08b; }
+    .q6-9 { fill:#fdae61; }
+    .q7-9 { fill:#f46d43; }
+    .q8-9 { fill:#d73027; }
+  </style>
+  </head>
+<body>
+  <section class="main-content">
+    <h2>Arrests per 100.000 inhabitants</h2>
+    <div id="chart"></div>
+  </section>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script type="text/javascript">
+    d3.json("provinces.geojson", draw);
+
+    function draw(geo_data) {
+      "use strict";
+      //Add data variable to use to connect external data
+      var width = 750,
+          height = 600,
+          scale = 6500,
+          translateX = -240,
+          translateY = 7260,
+          data;
+
+      var projection = d3.geo.mercator()
+          .scale(scale)
+          .translate( [translateX, translateY]);
+
+      var path = d3.geo.path().projection(projection);
+
+      var svg = d3.select("#chart")
+          .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("class", "map");
+
+      //remove the style attribute for the fill, it is now handled through the quantify function
+      var map = svg.selectAll("path")
+          .data(geo_data.features)
+          .enter()
+          .append("path")
+            .attr("d", path)
+            .style("stroke", "black")
+            .style("stroke-width", 0.5);
+
+      //Connect external JSON data to the GeoJSON data
+      //Give each path a class based on the external data range
+      d3.json("arrests.json", function(json){
+          data = json;
+          svg.selectAll("path")
+            .attr("class", quantify)
+      });
+
+      //Function to give each path a class bases on the range of the external data
+      //Connect to the correct dataset in the external JSON file
+      //Return => 9 different groups/classes, a class per interval of 150, first group <400, last >1450
+      function quantify(d) {
+        var f = data[d.properties.OMSCHRIJVI][1];
+        return "q" + Math.min(8, ~~((f-250) / 150)) + "-9";
+      }
+    };
+  </script>
+</body>
+</html>
