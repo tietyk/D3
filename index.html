@@ -1,59 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-	<title>D3 tutorial</title>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>D3 tutorial</title>
+	  <meta charset="utf-8">
+	  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="css/style.css">
+		<link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Alegreya+Sans+SC:900' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Alegreya' rel='stylesheet' type='text/css'>
+	  <link rel="stylesheet" href="css/style.css">
 	</head>
+
 	<body>
-		<h1>D3 Tutorial</h1>
-		<p>A step by step tutorial project to build an interactive map with D3.js</p>
-https://github.com/tietyk/D3/blob/master/Blogposts/201503-D3.js-part-1-Introduction-and-finding-data-Tiety-Kooistra-frontend.md
-		<ol>
-			<li>
-				<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201503-D3.js-part-1-Introduction-and-finding-data-Tiety-Kooistra-frontend.md">Introduction and finding data.</a>
-			</li>
-			<li>
-				<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201504-D3.js-part-2-Prepare-your-mapdata-with-QGIS-Tiety-Kooistra-frontend.md">Prepare your mapdata with QGIS.</a>
-			</li>
-			<li>
-				<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201505-D3.js-part-3-Render-a-map-Tiety-Kooistra-frontend.md">Render a map.</a>
-				<br>
-				<a href="Prototype/part3-9.html">Demo</a>
-			</li>
-			<li>
-				<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201506-D3.js-part-4-Adding-the-additional-data-Tiety-Kooistra-frontend.md">Adding the additional data.</a>
-				<br>
-				<a href="Prototype/part4-9.html">Demo</a>
-			</li>
-			<li>
-				<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201507-D3.js-part-5-Zoom-functionality-Tiety-Kooistra-frontend.md">Zoom functionality.</a>
-				<br>
-				<a href="Prototype/part5-9.html">Demo</a>
-			</li>
-			<li>
-				<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201508-D3.js-part-6-Add-labels-to-the-map-Tiety-Kooistra-frontend.md">Add labels to the map.</a>
-				<br>
-				<a href="Prototype/part6-9.html">Demo</a>
-			</li>
-			<li>
-				<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201509-D3.js-part-7-Adding-a-legend-to-interpret-the-data-Tiety-Kooistra-frontend.md">Adding a legend to interpret the data.</a>
-				<br>
-				<a href="Prototype/part7-9.html">Demo</a>
-			</li>
-			<li>
-				<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201510-D3.js-part-8-Interactive-tooltips-for-detailed-information-Tiety-Kooistra-frontend.md">Interactive tooltips for detailed information.</a>
-				<br>
-				<a href="Prototype/part8-9.html">Demo</a>
-			</li>
-			<li>
-				<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201511-D3.js-part-9-Display-several-years-of-data-with-a-time-series-Tiety-Kooistra-frontend.md">Display several years of data with a time series.</a>
-				<br>
-				<a href="Prototype/part9-9.html">Demo</a>
-			</li>
-		</ol>
+
+		<header class="main_header" role="banner">
+			<div class="content">
+				<h1 class="logo"><a href="http://tt-concepts.nl/">TT-Concepts</a></h1>
+			</div> <!-- content -->
+		</header>
+
+		<div id="main" role="main">
+			<section>
+				<div class="content" >	
+					<h2 class="heading">D3 Tutorial</h2>
+					<h4>A step by step tutorial project to build an interactive map with D3.js</h4>
+					<p>The demo's are working, all the finished blogposts will come online shortly around half May.</p>
+					<ol class="blogpost-serie">
+						<li class="blogpost-article">
+							<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201503-D3.js-part-1-Introduction-and-finding-data-Tiety-Kooistra-frontend.md">Introduction and finding data.</a>
+						</li>
+						<li class="blogpost-article">
+							<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201504-D3.js-part-2-Prepare-your-mapdata-with-QGIS-Tiety-Kooistra-frontend.md">Prepare your mapdata with QGIS.</a>
+						</li>
+						<li class="blogpost-article">
+							<a href="https://github.com/tietyk/D3/blob/master/Blogpost-articles/201505-D3.js-part-3-Render-a-map-Tiety-Kooistra-frontend.md">Render a map.</a>
+							<a class="demo" href="Prototype/part3-9.html">Demo</a>
+						</li>
+						<li class="blogpost-article">
+							<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201506-D3.js-part-4-Adding-the-additional-data-Tiety-Kooistra-frontend.md">Adding the additional data.</a>
+							<a class="demo" href="Prototype/part4-9.html">Demo</a>
+						</li>
+						<li class="blogpost-article">
+							<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201507-D3.js-part-5-Zoom-functionality-Tiety-Kooistra-frontend.md">Zoom functionality.</a>
+							<a class="demo" href="Prototype/part5-9.html">Demo</a>
+						</li>
+						<li class="blogpost-article">
+							<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201508-D3.js-part-6-Add-labels-to-the-map-Tiety-Kooistra-frontend.md">Add labels to the map.</a>
+							<a class="demo" href="Prototype/part6-9.html">Demo</a>
+						</li>
+						<li class="blogpost-article">
+							<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201509-D3.js-part-7-Adding-a-legend-to-interpret-the-data-Tiety-Kooistra-frontend.md">Adding a legend to interpret the data.</a>
+							<a class="demo" href="Prototype/part7-9.html">Demo</a>
+						</li>
+						<li class="blogpost-article">
+							<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201510-D3.js-part-8-Interactive-tooltips-for-detailed-information-Tiety-Kooistra-frontend.md">Interactive tooltips for detailed information.</a>
+							<a class="demo" href="Prototype/part8-9.html">Demo</a>
+						</li>
+						<li class="blogpost-article">
+							<a href="https://github.com/tietyk/D3/blob/master/Blogposts/201511-D3.js-part-9-Display-several-years-of-data-with-a-time-series-Tiety-Kooistra-frontend.md">Display several years of data with a time series.</a>
+							<a class="demo" href="Prototype/part9-9.html">Demo</a>
+						</li>
+					</ol>
+				</div>
+			</section>
+		</div>
+
+		<footer role="contentinfo">
+			<div class="content">
+				<h2 class="footerheader">TT-Concepts</h2>
+				<div class="info">
+					<p>E-mail: info@tt-concepts.nl</p>
+				</div>
+				<p class="copy">&copy;2015 TT-Concepts</p>
+			</div> <!-- content -->
+		</footer>
+
 	</body>
 </html>
