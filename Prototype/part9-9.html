@@ -100,9 +100,6 @@
   </section>
   <script src="http://d3js.org/d3.v3.min.js"></script>
   <script type="text/javascript">
-    d3.json("provinces.geojson", draw);
-  </script>
-  <script type="text/javascript">
     function draw(geo_data) {
       "use strict";
       //Add a year variable to connect the time series data
@@ -262,6 +259,8 @@
         }
       }
     };
+
+    d3.json("provinces.geojson", draw);
   </script>
 </body>
 </html>
