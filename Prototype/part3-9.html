@@ -24,9 +24,6 @@
   <!--Load D3 library -->
   <script src="http://d3js.org/d3.v3.min.js" type="text/javascript"></script>
   <script type="text/javascript">
-    //Use D3 to load the GeoJSON file of the Dutch provinces and call the draw function
-    d3.json("provinces.geojson", draw);
-
     //Use D3 to draw a SVG map based on the the GeoJSON file
     function draw(geo_data) {
       "use strict";
@@ -67,6 +64,10 @@
             .style("stroke", "black")
             .style("stroke-width", 0.5);
     };
+
+    //Use D3 to load the GeoJSON file of the Dutch provinces and call the draw function
+    d3.json("provinces.geojson", draw);
+
   </script>
 </body>
 </html>
