@@ -84,19 +84,26 @@ h1, h2, h3, h4, h5, h6 {
     color: #fefbdb; 
 }
 .blogpost-serie {
+    display: block;
     padding: 2em 0;
+    position: relative;
 }
-.blogpost-article {
+.blogpost{
     margin-left: 20px;
     padding: 0.25em 0;
 }
-.demo {
-    font-family: "Alegreya Sans", "Trebuchet MS", Helvetica, sans-serif;
-    float: right;
-    font-weight: 700;
+.blogpost-article {
+    width: 80%;
 }
-.demo:hover,
-.blogpost-article a:hover{
+.blogpost-demo {
+    font-family: "Alegreya Sans", "Trebuchet MS", Helvetica, sans-serif;
+    position: absolute;
+    right: 8px;
+    font-weight: 700;
+    text-align: right;
+}
+.blogpost-demo:hover,
+.blogpost-link:hover{
     border-bottom: 1px solid #fefbdb;
 }
 
