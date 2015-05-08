@@ -43,6 +43,7 @@
   <script type="text/javascript">
     function draw(geo_data) {
       "use strict";
+      //for the drawing of the legend we added the legendRectSize and the legentSpacing as new variables to the list
       var width = 750,
           height = 600,
           scale = 6500,
@@ -108,31 +109,31 @@
         //Add a class 
         //Add coordinates to position the g elements on the SVG map top left
           //function to list all the legend elements under each other based on the hight of one element
-      var legend = d3.select('svg')
+      var legend = d3.select("svg")
           .append("g")
           .selectAll("g")
           .data(color.domain())
           .enter()
-          .append('g')
-            .attr('class', 'legend')
-            .attr('transform', function(d, i) {
+          .append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) {
               var height = legendRectSize;
               var horz = 0;
               var vert = i * height;
-              return 'translate(' + horz + ',' + vert + ')';
+              return "translate(" + horz + "," + vert + ")";
           });
 
       //Append a rectangle to each legend element to display the colors from the domain in the color variable
-      legend.append('rect')
-          .attr('width', legendRectSize)
-          .attr('height', legendRectSize)
-          .style('fill', color)
-          .style('stroke', color);
+      legend.append("rect")
+          .attr("width", legendRectSize)
+          .attr("height", legendRectSize)
+          .style("fill", color)
+          .style("stroke", color);
 
       //Append a text element to each legend element based on the listed domains in the color variable
-      legend.append('text')
-          .attr('x', legendRectSize + legendSpacing)
-          .attr('y', legendRectSize - legendSpacing)
+      legend.append("text")
+          .attr("x", legendRectSize + legendSpacing)
+          .attr("y", legendRectSize - legendSpacing)
           .text(function(d) { return d; });
 
       d3.json("arrests.json", function(json){
