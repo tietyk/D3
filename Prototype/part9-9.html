@@ -217,7 +217,8 @@
       });
 
       function zoomhandler() {
-        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")")
+          .style("font-size", function(){return 12 / d3.event.scale + "px";});
       }
 
       //Add a year variable to select the correct data from the arrests.json file. index=0 in the JSON file corresponds with the year 1999, index 14 is data from the year 2013

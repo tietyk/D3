@@ -150,7 +150,8 @@
       });
 
       function zoomhandler() {
-        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")")
+          .style("font-size", function(){return 12 / d3.event.scale + "px";});
       }
       function quantify(d) {
         var f = data[d.properties.OMSCHRIJVI][1];
