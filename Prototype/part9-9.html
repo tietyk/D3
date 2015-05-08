@@ -168,29 +168,29 @@
           .domain(["<400", "400-549", "550-699", "700-849", "850-999", "1000-1149", "1150-1299", "1300-1449", ">1450"])
           .range(["#1a9850", "#66bd63", "#a6d96a","#d9ef8b","#ffffbf","#fee08b","#fdae61","#f46d43","#d73027"]);
 
-      var legend = d3.select('svg')
+      var legend = d3.select("svg")
           .append("g")
           .selectAll("g")
           .data(color.domain())
           .enter()
-          .append('g')
-            .attr('class', 'legend')
-            .attr('transform', function(d, i) {
+          .append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) {
               var height = legendRectSize;
-              var horz = 0;
-              var vert = i * height;
-              return 'translate(' + horz + ',' + vert + ')';
+              var x = 0;
+              var y = i * height;
+              return "translate(" + x + "," + y + ")";
           });
 
-      legend.append('rect')
-          .attr('width', legendRectSize)
-          .attr('height', legendRectSize)
-          .style('fill', color)
-          .style('stroke', color);
+      legend.append("rect")
+          .attr("width", legendRectSize)
+          .attr("height", legendRectSize)
+          .style("fill", color)
+          .style("stroke", color);
 
-      legend.append('text')
-          .attr('x', legendRectSize + legendSpacing)
-          .attr('y', legendRectSize - legendSpacing)
+      legend.append("text")
+          .attr("x", legendRectSize + legendSpacing)
+          .attr("y", legendRectSize - legendSpacing)
           .text(function(d) { return d; });
 
       //Select all .time-series elements on the page
