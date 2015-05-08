@@ -96,7 +96,7 @@
           .append("text")
             .attr("class", "label")
             .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
-            .text(function(d) { return d.properties.OMSCHRIJVI;} );
+            .text(function(d) { return d.properties.OMSCHRIJVI;});
 
       d3.json("arrests.json", function(json){
           data = json;
@@ -104,8 +104,10 @@
             .attr("class", quantify)
       });
 
+      //Add style to adjust the font-size to the scale extend so the text stays the same size and doesn't zoom along when you zoom in.
       function zoomhandler() {
-        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")")
+          .style("font-size", function(){return 12 / (d3.event.scale) + "px";});
       }
 
       function quantify(d) {
