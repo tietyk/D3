@@ -103,9 +103,11 @@ h1, h2, h3, h4, h5, h6 {
     text-align: right;
 }
 .blogpost-demo:hover,
-.blogpost-link:hover{
+.blogpost-link:hover,
+.back:hover{
     border-bottom: 1px solid #fefbdb;
 }
+
 
 /*FOOTER*/
 footer {
