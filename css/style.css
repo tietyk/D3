@@ -71,11 +71,20 @@ h1, h2, h3, h4, h5, h6 {
 	padding: 0.75em 0;
     text-align: center;
 }
+.subheading{
+    text-align: center;
+}
+.back{
+    float: right;
+}
 .logo a{
     color: #1f1306;
 }
 .logo a:hover{
     border-bottom: 5px solid #1f1306;
+}
+.heading a:hover{
+    border-bottom: 5px solid #fefbdb;
 }
 
 /*MAIN*/
@@ -87,6 +96,7 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     padding: 2em 0;
     position: relative;
+    clear: both;
 }
 .blogpost{
     margin-left: 20px;
